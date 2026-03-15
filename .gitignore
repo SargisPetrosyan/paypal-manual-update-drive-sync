@@ -1,0 +1,56 @@
+# Python-generated files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+*.egg
+*.db
+
+# Testing & Coverage
+.pytest_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Virtual environments
+.venv
+env/
+venv/
+ENV/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/*
+*.log
+
+# Credentials & Sensitive Data (IMPORTANT - Never commit!)
+test_data/
+database/*
+!database/.gitkeep
+!app/creds/google/.gitkeep
+app/creds/google/*
+!app/creds/google/.gitkeep
+app/creds/zettle/*
+!app/creds/zettle/.gitkeep
+.env
+.env.local
+*.yaml
+
+# Data files (local/temporary)
+data/
+test.py

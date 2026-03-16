@@ -1,7 +1,6 @@
 from sqlalchemy import Engine
 from sqlmodel import  SQLModel, create_engine
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 

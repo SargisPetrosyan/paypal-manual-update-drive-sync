@@ -3,3 +3,44 @@ test_data/
 *.yaml
 app/creds/google/credentials.json
 app/creds/google/token.json
+.git
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# Logs
+logs/
+
+# Database files
+*.sqlite3
+*.db
+
+# Git
+.git
+.gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+
+# IDE files
+.vscode/
+.idea/
+
+# Environment variables
+.env
+
+# Tests (optional)
+tests/
+
+# Docker
+docker-compose.yml
+dockerfile

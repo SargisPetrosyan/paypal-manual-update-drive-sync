@@ -158,10 +158,10 @@ class InventoryManualDataCollector:
         self.purchase_fetcher:PurchasesFetcher = PurchasesFetcher(token_data=self.paypal_token)
         self.repo_updater:InventoryUpdateRepository = repo_updater
         self._purchases_joined_joined:dict[frozenset[UUID], int] = {}
-        self.start_date: datetime = datetime.strptime("2026-03-21 11:14:02+0000","%Y-%m-%d %H:%M:%S%z").astimezone(timezone.utc)
-        self.end_date: datetime = datetime.strptime("2026-03-21 14:07:40+0000","%Y-%m-%d %H:%M:%S%z").astimezone(timezone.utc)
-        # self.start_date: datetime = utc_time - (timedelta(minutes=PREVIOUS_HOUR_INTERVAL_MINUTE) + timedelta(minutes=TIME_INTERVAL_MINUTE))
-        # self.end_date:datetime =  utc_time -  timedelta(minutes=PREVIOUS_HOUR_INTERVAL_MINUTE)
+        # self.start_date: datetime = datetime.strptime("2026-03-21 11:14:02+0000","%Y-%m-%d %H:%M:%S%z").astimezone(timezone.utc)
+        # self.end_date: datetime = datetime.strptime("2026-03-21 14:07:40+0000","%Y-%m-%d %H:%M:%S%z").astimezone(timezone.utc)
+        self.start_date: datetime = utc_time - (timedelta(minutes=PREVIOUS_HOUR_INTERVAL_MINUTE) + timedelta(minutes=TIME_INTERVAL_MINUTE))
+        self.end_date:datetime =  utc_time -  timedelta(minutes=PREVIOUS_HOUR_INTERVAL_MINUTE)
 
     def get_manual_changed_products(self) -> list[PaypalProductData] | None:
         

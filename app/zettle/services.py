@@ -25,7 +25,6 @@ class InventoryUpdatesDataJoiner:
         self._inventory_update_joined:dict[tuple[UUID,UUID], InventoryUpdateData] = {}
     
     def join_inventory_update_data(self) -> dict[tuple[UUID,UUID], InventoryUpdateData]:
-        logger.info(msg="start inventor data joining")
         for update in self.inventory_changes:
             key:tuple[UUID,UUID] = (update.product_id, update.variant_id)
             change:int = update.after - update.before
@@ -37,7 +36,7 @@ class InventoryUpdatesDataJoiner:
                     updated_value=update.after,
                     timestamp=update.timestamp,
                 )
-        logger.info(msg=f"Inventory data was joined products count: '{self._inventory_update_joined}")
+        logger.info(msg=f"Inventory data was joined products count: '{len(self._inventory_update_joined)}")
         return self._inventory_update_joined
     
 class PurchaseDataJoiner:
@@ -48,7 +47,6 @@ class PurchaseDataJoiner:
     def join_purchase_update_data(self,purchases:ListOfPurchases) -> dict[tuple[UUID,UUID], int]:
         # fetch stored inventory updates
 
-        logger.info("start joining purchases data")
         validated_purchases:ListOfPurchases = ListOfPurchases.model_validate(obj=purchases)
 
         for purchases_iter in validated_purchases.purchases:
@@ -59,6 +57,7 @@ class PurchaseDataJoiner:
                     self._purchases_joined[key] = quantity
                 else:
                     self._purchases_joined[key] += quantity
+        logger.info("purchases data was joined")
         return self._purchases_joined
                     
 
@@ -75,13 +74,14 @@ class InventoryManualChangesChecker:
     def get_manual_changes(self) -> dict[tuple[UUID, UUID], InventoryUpdateData]:
         logger.info("get manual changes comparing purchases and db result")
         for purchase, value in self.marge_purchases_update.items():
-            self.marge_inventory_update[purchase].updated_value = self.marge_inventory_update[purchase].updated_value + value
             try:
+                self.marge_inventory_update[purchase].updated_value = self.marge_inventory_update[purchase].updated_value + value
                 if self.marge_inventory_update[purchase].stock == self.marge_inventory_update[purchase].updated_value:
                     del self.marge_inventory_update[purchase]
             except KeyError:
-                logger.critical(msg="database has missing data")
+                logger.critical(msg="database storing logic not working properly, purchases and db product changes not matches")
                 raise ValueError("database has missing value")
+        logger.info(f"manual changes count:{len(self.marge_inventory_update)}")
         return self.marge_inventory_update
             
 
@@ -98,7 +98,7 @@ class ManualProductData:
         self.list_of_products:list[PaypalProductData] = []
     
     def get_manual_changes_product_data(self) -> list[PaypalProductData]:
-        logger.info("get manual changed product data ")
+        logger.info("fill product missing data for drive storing")
         for key,value in self.manual_changes.items():
             product_data:dict = self.data_fetcher.get_product_data(
                 product_uuid=str(object=key[0]), 
@@ -162,8 +162,6 @@ class InventoryManualDataCollector:
         self.end_date:datetime =  self.time_interval.end_date
 
     def get_manual_changed_products(self) -> list[PaypalProductData] | None:
-        
-        logger.info(msg='get manual changed products')
                 
         organization_id: str = str(object=UUID(hex=os.environ[f"{self.shop_name.upper()}_ORGANIZATION_UUID"]))
 
@@ -176,7 +174,6 @@ class InventoryManualDataCollector:
         if not inventory_updates:
             logger.info(f"other was not any changes for time interval start:'{any_to_sweden_time(self.start_date)}', end:'{any_to_sweden_time(self.end_date)}'")
             return None
-        
         # inventory update data joining
         inventory_data_joiner = InventoryUpdatesDataJoiner(inventory_changes=inventory_updates)
         
@@ -190,6 +187,7 @@ class InventoryManualDataCollector:
             start_date=self.start_date,
             end_date=self.end_date,
         )
+
         try:
             validate_purchases:ListOfPurchases = ListOfPurchases.model_validate(obj=purchases)
         except ValidationError:
@@ -205,6 +203,7 @@ class InventoryManualDataCollector:
         )
 
         manual_changes: dict[tuple[UUID,UUID], InventoryUpdateData] = inventory_manual_checker.get_manual_changes()
+
         if not manual_changes:
             logger.info(f"there is not manual changes for time interval start:'{any_to_sweden_time(self.start_date)}', end:'{any_to_sweden_time(self.end_date)}'")
             return None
@@ -218,6 +217,3 @@ class InventoryManualDataCollector:
         
         product_data_with_manual_changes:list[PaypalProductData] =  product_data_manual.get_manual_changes_product_data()
         return product_data_with_manual_changes
-
-
-

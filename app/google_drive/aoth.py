@@ -12,30 +12,34 @@ import logging
 
 logger: logging.Logger = logging.getLogger(name=__name__)
 
+class DriveCredentialsGetter:
+    def __init__(self) -> None:
+        self.creds:Credentials = self._get_drive_credentials()
 
-def get_drive_credentials() -> Credentials:
-    logger.info("getting google drive credentials")
-    BASE_DIR: str = os.path.dirname(os.path.abspath(path=__file__))
-    TOKEN_PATH: str = os.path.abspath(
-        path=os.path.join(BASE_DIR, "../../app/creds/google/token.json")
-    )
-    creds: Credentials | ExternalAccountAuthorized | None = None
-
-    if os.path.exists(path=TOKEN_PATH):
-        logger.warning("token file exist found start authentication")
-        creds = Credentials.from_authorized_user_file(
-            filename=TOKEN_PATH, scopes=DRIVE_SCOPES
+    def _get_drive_credentials(self) -> Credentials:
+        logger.info("getting google drive credentials")
+        BASE_DIR: str = os.path.dirname(os.path.abspath(path=__file__))
+        TOKEN_PATH: str = os.path.abspath(
+            path=os.path.join(BASE_DIR, "../../app/creds/google/token.json")
         )
+        creds: Credentials | ExternalAccountAuthorized | None = None
 
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            logger.warning("creds was expired getting new token")
-            creds.refresh(request=Request())
-            with open(TOKEN_PATH, "w") as token:
-                token.write(creds.to_json())  # type: ignore
-        elif not creds:
-            raise ValueError("google Token file not exist")
-    return creds  # type: ignore
+        if os.path.exists(path=TOKEN_PATH):
+            logger.info("token file exist found start authentication")
+            creds = Credentials.from_authorized_user_file(
+                filename=TOKEN_PATH, scopes=DRIVE_SCOPES
+            )
+
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                logger.warning("cred was expired getting new token")
+                creds.refresh(request=Request())
+                with open(TOKEN_PATH, "w") as token:
+                    token.write(creds.to_json())  # type: ignore
+            elif not creds:
+                raise ValueError("google Token file not exist")
+        logger.info("token file is up to date")
+        return creds  # type: ignore
 
 
 def make_google_token_file() -> Credentials:

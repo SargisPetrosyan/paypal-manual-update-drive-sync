@@ -7,9 +7,8 @@ from dotenv import load_dotenv
 from gspread.spreadsheet import Spreadsheet
 from googleapiclient.errors import HttpError #type:ignore
 from googleapiclient.discovery import build #type:ignore
-from google.oauth2 import service_account
+from google.oauth2.credentials import Credentials
 
-from app.google_drive.aoth import get_drive_credentials
 
 logger: logging.Logger = logging.getLogger(name=__name__)
 
@@ -18,10 +17,8 @@ load_dotenv()
 root: str | None = os.getenv(key="ROOT_FOLDER_ID")
 
 class GoogleDriveClient:
-    def __init__(self) -> None:
-        creds: Credentials = get_drive_credentials()
+    def __init__(self, creds:Credentials) -> None:
         try:
-            logger.info("creating google drive client")
             self._client: Any = build(
                 serviceName="drive", version="v3", credentials=creds
             )
@@ -79,12 +76,10 @@ class GoogleDriveClient:
         return self._client.about().get(fields="storageQuota").execute()
 
 class SpreadSheetClient:
-    def __init__(self) -> None:
-        credentials: Credentials = get_drive_credentials()
+    def __init__(self,creds:Credentials) -> None:
         try:
-            logger.info("SpreadSheetClient creation")
-            self._client: gspread.Client = gspread.authorize(credentials=credentials)
-            logger.info("SpreadSheetClient was create successfully")
+            self._client: gspread.Client = gspread.authorize(credentials=creds)
+            logger.info("'SpreadSheetClient' was create successfully")
         except HttpError as error:
             logger.critical("an occur error during creation 'SpreadSheetClient'")
             raise RuntimeError(f"Failed to build sheet client: {error}")

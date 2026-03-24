@@ -260,7 +260,7 @@ class DayWorksheetValueUpdater:
         day_worksheet_reader: DayWorksheetProductReader,
     ) -> None:
         
-        logger.info(msg=f"update day worksheet for product {context.product.name}'")
+        logger.info(msg=f"update day worksheet for product '{context.product.name}'")
 
         if context.product.after - context.product.before > 0:
             logger.info(msg="update stock in in worksheets")

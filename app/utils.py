@@ -70,26 +70,6 @@ def get_row_from_response(response: JSONResponse) -> int:
         product_row_number: str = product_row_position[0][1:]
         return int(product_row_number)
 
-
-class ManagersCreator:
-    def __init__(self) -> None:
-        self._spreadsheet_client = SpreadSheetClient()
-        self._google_drive_client = GoogleDriveClient()
-        self._spreadsheet_manager = SpreadSheetFileManager(
-            client=self._spreadsheet_client
-        )
-        self._google_drive_manager = GoogleDriveFileManager(
-            client=self._google_drive_client
-        )
-
-    @property
-    def google_drive_manager(self) -> GoogleDriveFileManager:
-        return self._google_drive_manager
-
-    @property
-    def spreadsheet_manager(self) -> SpreadSheetFileManager:
-        return self._spreadsheet_manager
-
     
 class DateRangeBuilder:
     def __init__(self,end_date:datetime,interval_by_hours:int) -> None:

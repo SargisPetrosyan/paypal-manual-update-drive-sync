@@ -1,5 +1,5 @@
 from typing import List
-from gspread import Cell, ValueRange, Worksheet
+from gspread import Cell, GSpreadException, ValueRange, Worksheet
 
 from app.constants import (
     DAY_PRODUCT_AND_VARIANT_ID_COL,
@@ -29,17 +29,19 @@ class DayWorksheetProductReader:
         self.stock_out_index: int = DAY_PRODUCT_STOCK_OUT_COL
 
     def get_product_row_by_name(self, product_variant_id: str) -> int:
+
         product: Cell | None = self.worksheet.find(
             query=product_variant_id, in_column=DAY_PRODUCT_AND_VARIANT_ID_COL
         )
-
+ 
         if not product:
             raise ValueError("Product was deleted")
         return product.row
 
     def get_product_stock_in(self, product_row: int) -> int:
+        
         stock_in: Cell = self.worksheet.cell(row=product_row, col=self.stock_in_col)
-
+        
         if not stock_in.value:
             raise TypeError("day product stock in value not exist")
         return int(stock_in.value)

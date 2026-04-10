@@ -37,7 +37,7 @@ class InventoryUpdatesDataJoiner:
                     updated_value=update.after,
                     timestamp=update.timestamp,
                 )
-        logger.info(msg=f"Inventory data was joined products count: '{len(self._inventory_update_joined)}")
+        logger.info(msg=f"Inventory data was joined products count: '{len(self._inventory_update_joined)}'")
         return self._inventory_update_joined
     
 class PurchaseDataJoiner:

@@ -61,7 +61,7 @@ def sheet_exist(items: dict[str, int], sheet_name: str) -> int | None:
     return None
 
 def get_row_from_response(response: JSONResponse) -> int:
-    product_update_data: str = response["updates"]["updatedRange"]
+    product_update_data: str = response["updates"]["updatedRange"] #type:ignore
     product_row_position: str = product_update_data.split("!")[-1]
     if ":" in product_row_position:
         product_row_number: str = product_row_position.split(":")[0][1:]

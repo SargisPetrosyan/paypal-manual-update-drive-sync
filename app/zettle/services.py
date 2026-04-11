@@ -80,8 +80,7 @@ class InventoryManualChangesChecker:
                 if self.marge_inventory_update[purchase].stock == self.marge_inventory_update[purchase].updated_value:
                     del self.marge_inventory_update[purchase]
             except KeyError:
-                logger.critical(msg="database storing logic not working properly, purchases and db product changes not matches")
-                raise ValueError("database has missing value")
+                logger.warning(msg="purchase item has no inventory tracking")
         logger.info(f"manual changes count:{len(self.marge_inventory_update)}")
         return self.marge_inventory_update
             

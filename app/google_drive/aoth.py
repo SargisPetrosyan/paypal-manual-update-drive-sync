@@ -38,7 +38,7 @@ class DriveCredentialsGetter:
                 try:
                     creds.refresh(request=Request())
                 except RefreshError:
-                    logger.info('token was expired or revoked')
+                    logger.critical('token was expired or revoked')
                     raise RefreshError()
                 with open(TOKEN_PATH, "w") as token:
                     token.write(creds.to_json())  # type: ignore

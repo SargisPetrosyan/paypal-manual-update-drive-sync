@@ -17,4 +17,5 @@ class InventoryBalanceUpdateModel(SQLModel, table=True):
         before:{self.before}, 
         after:{self.after}, 
         change:{self.after}')>"""
+    
 

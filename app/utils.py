@@ -48,7 +48,7 @@ class FileName:
         self.day_worksheet_name: str = self.day
         self.month_file_name: str = str(object=date.strftime("%B"))
         self.day_file_name: str = f"{self.year}-{self.month}-{self.month_file_name}"
-        self.month_worksheet_name: str = self.day_file_name
+        self.month_worksheet_name: str = self.month_file_name
         self.monthly_report_file_name: str = f"{self.year}-monthly report"
         self.month_stock_in_and_out_col_index: int = int(self.day) + MONTH_PRODUCT_STOCK_IN_NAME_COL_OFFSET
         self.month_stock_out_row_index:int = int(self.day) + 1

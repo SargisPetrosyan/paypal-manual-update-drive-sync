@@ -13,7 +13,7 @@ from app.constants import SWEDEN_TIMEZONE_NAME
 
 
 def setup_logger() -> None:
-    filename="app/logs/drive_updater_logs.log"
+    filename="app/logs/drive_sync_logs.log"
 
     logging.basicConfig(
         filename=filename,

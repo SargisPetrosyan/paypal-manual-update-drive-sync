@@ -95,7 +95,7 @@ class OrganizationsNameMappedId:
 def get_folder_id_by_shop_id(shop_id:str):
     dala_shop_organization_id: str = os.environ['DALA_ORGANIZATION_UUID']
     art_shop_organization_id: str = os.environ['ART_ORGANIZATION_UUID']
-    cafe_shop_organization_id = ''
+    cafe_shop_organization_id: str = os.environ['CAFE_ORGANIZATION_UUID']
 
     shop_ids: dict[str, str] = {
         dala_shop_organization_id:DALASHOP_FOLDER_ID,

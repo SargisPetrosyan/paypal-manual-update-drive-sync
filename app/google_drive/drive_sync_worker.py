@@ -51,7 +51,7 @@ class HourlyWorkflowRunner:
 
             for product in list_of_manual_products:
                 time.sleep(8) #delay requests for google drive limitations
-                context =Context(product=product)
+                context=Context(product=product)
                 # step 2 check if google drive had proper file structure
                 drive_file_ensurer = DriveFileStructureEnsurer(
                     google_drive_file_manager=self.google_drive_file_manager,

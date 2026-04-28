@@ -20,8 +20,9 @@ import datetime
 logger: logging.Logger = logging.getLogger(name=__name__)
 
 class HourlyWorkflowRunner:
-    def __init__(self,database:Database) -> None:
+    def __init__(self,database:Database, time: datetime.datetime) -> None:
         self.engine: Engine = database.engine
+        self.utc_time: datetime.datetime = time
         self.shops: tuple[str, str, str]= SHOPS
         self.google_creds = DriveCredentialsGetter()
         self.google_drive_client = GoogleDriveClient(creds=self.google_creds.creds)
@@ -30,14 +31,13 @@ class HourlyWorkflowRunner:
         self.spreadsheet_manager = SpreadSheetFileManager(client=self.spreadsheet_file_client)
 
     def run(self):
-        utc_time =datetime.datetime.now(tz=datetime.timezone.utc)
         repo_updater: InventoryUpdateRepository = InventoryUpdateRepository(engine=self.engine)
         
         for name in self.shops:
             logger.info(f"check manual changes for '{name}'")
 
             manual_collector = InventoryManualDataCollector(
-                utc_time=utc_time,
+                utc_time=self.utc_time,
                 repo_updater=repo_updater,
                 shop_name=name,
 )

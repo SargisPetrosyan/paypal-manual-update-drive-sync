@@ -157,3 +157,4 @@ class CredentialContext():
         self.destination_url: str  = os.environ["DESTINATION_URL"] + "/inventory_tracker_webhook"
         self.mail: str = os.environ["MAIL"]
         self.events: list[str] = SHOP_SUBSCRIPTION_EVENTS
+
